@@ -3,10 +3,10 @@ name: CI/CD Pipeline for FastAPI App
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch
+      - master  # Trigger on push to the main branch
   pull_request:
     branches:
-      - main  # Trigger on pull request to main branch
+      - master  # Trigger on pull request to main branch
 
 jobs:
   build:
