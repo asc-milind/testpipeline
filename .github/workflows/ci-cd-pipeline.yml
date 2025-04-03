@@ -3,30 +3,40 @@ name: Deploy FastAPI to Azure Container Apps
 on:
   push:
     branches:
-      - main  # Adjust if using another branch
+      - master  # Change this if you're using a different branch
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: <your-subscription-id>
 
-    - name: Log in to Azure Container Registry
-      run: |
-        az acr login --name myacrname
+      - name: Log in to Azure Container Registry
+        run: |
+          az acr login --name ${{ secrets.AZURE_CONTAINER_REGISTRY }}
 
-    - name: Build and push Docker image
-      run: |
-        docker build -t myacrname.azurecr.io/my-fastapi-app:latest .
-        docker push myacrname.azurecr.io/my-fastapi-app:latest
+      - name: Build and Tag Docker Image
+        run: |
+          docker build -t ${{ secrets.AZURE_CONTAINER_REGISTRY }}/fastapi-app:latest .
+          docker tag ${{ secrets.AZURE_CONTAINER_REGISTRY }}/fastapi-app:latest ${{ secrets.AZURE_CONTAINER_REGISTRY }}/fastapi-app:${{ github.sha }}
 
-    - name: Deploy to Azure Container App
-      run: |
-        az containerapp update --name my-fastapi-app --resource-group myResourceGroup --image myacrname.azurecr.io/my-fastapi-app:latest
+      - name: Push Docker Image to ACR
+        run: |
+          docker push ${{ secrets.AZURE_CONTAINER_REGISTRY }}/fastapi-app:latest
+          docker push ${{ secrets.AZURE_CONTAINER_REGISTRY }}/fastapi-app:${{ github.sha }}
+
+      - name: Deploy to Azure Container Apps
+        run: |
+          az containerapp update \
+            --name ${{ secrets.AZURE_CONTAINER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --image ${{ secrets.AZURE_CONTAINER_REGISTRY }}/fastapi-app:latest
