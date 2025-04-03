@@ -6,41 +6,14 @@ on:
       - master  # Change this if you're using a different branch
 
 jobs:
+
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          client-id: 3d09542f-bda3-4638-ad9c-03dd436a7da9
-          tenant-id: 8f738adf-29d9-49e5-861b-534255b7b72f
-          subscription-id: e3445714-e41b-4a7a-b820-3fd6e00e26a0
-          auth-type: SERVICE_PRINCIPAL
-          client-secret: 2c16c179-d67b-4122-bb20-8b6608f8473d
-          allow-no-subscriptions: true
-          enable-AzPSSession: true
-
-      - name: Log in to Azure Container Registry
-        run: |
-          az acr login --name your-acr-name-here.azurecr.io
-
-      - name: Build and Tag Docker Image
-        run: |
-          docker build -t your-acr-name-here.azurecr.io/fastapi-app:latest .
-          docker tag your-acr-name-here.azurecr.io/fastapi-app:latest your-acr-name-here.azurecr.io/fastapi-app:${{ github.sha }}
-
-      - name: Push Docker Image to ACR
-        run: |
-          docker push your-acr-name-here.azurecr.io/fastapi-app:latest
-          docker push your-acr-name-here.azurecr.io/fastapi-app:${{ github.sha }}
-
-      - name: Deploy to Azure Container Apps
-        run: |
-          az containerapp update \
-            --name your-container-app-name-here \
-            --resource-group your-resource-group-here \
-            --image your-acr-name-here.azurecr.io/fastapi-app:latest
+    
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - run: |
+        az webapp list --query "[?state=='Running']"
