@@ -21,6 +21,8 @@ jobs:
           subscription-id: e3445714-e41b-4a7a-b820-3fd6e00e26a0
           auth-type: SERVICE_PRINCIPAL
           client-secret: 2c16c179-d67b-4122-bb20-8b6608f8473d
+          allow-no-subscriptions: true
+          enable-AzPSSession: true
 
       - name: Log in to Azure Container Registry
         run: |
