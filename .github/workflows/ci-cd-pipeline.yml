@@ -16,9 +16,9 @@ jobs:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: <your-subscription-id>
+          client-id: 3d09542f-bda3-4638-ad9c-03dd436a7da9
+          tenant-id: 8f738adf-29d9-49e5-861b-534255b7b72f
+          subscription-id: e3445714-e41b-4a7a-b820-3fd6e00e26a0
 
       - name: Log in to Azure Container Registry
         run: |
