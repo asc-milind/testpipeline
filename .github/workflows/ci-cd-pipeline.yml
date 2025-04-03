@@ -9,6 +9,12 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+    
+    - name: Debug Azure Login
+      run: |
+        az account show
+        az account list
+
 
     - uses: azure/login@v2
       with:
