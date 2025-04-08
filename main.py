@@ -6,3 +6,8 @@ app = FastAPI()
 @app.get("/")
 def read_root():
     return {"message": "Testing Workflow 10"}
+
+
+@app.get("/a")
+def read_root_a():
+    return {"message": "Testing Workflow 10"}
