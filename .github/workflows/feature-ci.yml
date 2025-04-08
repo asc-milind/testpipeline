@@ -7,20 +7,18 @@ on:
 
 jobs:
   run-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Use a stable, fully supported version
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-        # SHA: ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-        # SHA: 7e597ce284e0b40cf85abcb7aa2474fa843336422b823ce21b6643f3a262b88d
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -29,16 +27,15 @@ jobs:
         run: pytest --cov=your_module tests/
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3@b3cd15d92452f3c4a3d22af79e72a9405e4b8a43
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-report
           path: htmlcov
-        # Optional: pin to a SHA for even more security
 
   create-pr:
     needs: run-tests
     if: success()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Code
