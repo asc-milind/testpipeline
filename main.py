@@ -9,6 +9,6 @@ def read_root():
     return {"message": "Testing Workflow 10"}
 
 
-@app.get("/a")
+@app.get("/ab")
 def read_root_a():
     return {"message": "Testing Workflow 10"}
